@@ -7,12 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-/**
- * Stores FAQ entries and finds the best match for a user message using
- * TF-IDF weighted cosine similarity (a simple machine-learning-style approach).
- * New Q&A pairs can be taught at runtime and are saved to faq.txt.
- */
 public class KnowledgeBase {
     private static final Path FILE = Paths.get("faq.txt");
     private final NLPProcessor nlp;
@@ -29,7 +23,6 @@ public class KnowledgeBase {
         }
         train();
     }
-
     private void loadDefaults() {
         add("hello", "Hello! I'm CodeBot. Ask me about the CodeAlpha internship, Java, or type 'help'.");
         add("goodbye see you later", "Goodbye! Good luck with your Java internship tasks!");
@@ -53,7 +46,6 @@ public class KnowledgeBase {
         add("what is spring framework", "Spring is a Java framework for building enterprise apps, offering dependency injection, REST APIs (Spring Boot), and data access support.");
         add("how do I run a java program", "Compile with 'javac MyFile.java' and run with 'java MyFile'. You need the JDK installed.");
     }
-
     private void loadFromFile() {
         try {
             for (String line : Files.readAllLines(FILE)) {
@@ -65,7 +57,6 @@ public class KnowledgeBase {
             loadDefaults();
         }
     }
-
     private void saveAll() {
         List<String> lines = new ArrayList<>();
         for (FaqEntry e : entries) lines.add(e.getQuestion() + " => " + e.getAnswer());
@@ -75,12 +66,9 @@ public class KnowledgeBase {
             System.out.println("Could not save faq.txt: " + e.getMessage());
         }
     }
-
     private void add(String question, String answer) {
         entries.add(new FaqEntry(question, answer, nlp.process(question)));
     }
-
-    /** Teaches the bot a new Q&A pair and retrains. */
     public void learn(String question, String answer) {
         add(question, answer);
         try {
@@ -91,8 +79,6 @@ public class KnowledgeBase {
         }
         train();
     }
-
-    /** Computes IDF weights and a TF-IDF vector for each FAQ entry. */
     private void train() {
         idf.clear();
         Map<String, Integer> docFreq = new HashMap<>();
@@ -105,7 +91,6 @@ public class KnowledgeBase {
         }
         for (FaqEntry e : entries) e.setVector(vectorize(e.getTokens()));
     }
-
     private Map<String, Double> vectorize(List<String> tokens) {
         Map<String, Double> v = new HashMap<>();
         for (String t : tokens) v.merge(t, 1.0, Double::sum);
@@ -114,7 +99,6 @@ public class KnowledgeBase {
         }
         return v;
     }
-
     private double cosine(Map<String, Double> a, Map<String, Double> b) {
         double dot = 0, na = 0, nb = 0;
         for (Map.Entry<String, Double> e : a.entrySet()) {
@@ -125,8 +109,6 @@ public class KnowledgeBase {
         for (double x : b.values()) nb += x * x;
         return (na == 0 || nb == 0) ? 0 : dot / (Math.sqrt(na) * Math.sqrt(nb));
     }
-
-    /** Returns the best-matching entry, or null if nothing is similar enough. */
     public FaqEntry findBestMatch(String input, double threshold) {
         List<String> tokens = nlp.process(input);
         if (tokens.isEmpty()) return null;
