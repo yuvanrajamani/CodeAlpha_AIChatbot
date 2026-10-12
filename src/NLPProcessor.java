@@ -5,11 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-/**
- * Basic Natural Language Processing pipeline:
- * lowercase -> remove punctuation -> tokenize -> remove stop words -> normalize synonyms -> stem.
- */
 public class NLPProcessor {
     private static final Set<String> STOP_WORDS = new HashSet<>(Arrays.asList(
             "a", "an", "the", "is", "are", "am", "was", "were", "be", "been", "do", "does", "did",
@@ -17,8 +12,6 @@ public class NLPProcessor {
             "for", "with", "and", "or", "but", "can", "could", "would", "should", "will", "shall",
             "please", "tell", "about", "this", "that", "there", "so", "if", "as", "by", "have", "has",
             "what", "how", "which", "who", "when", "where", "why", "get", "give", "want", "need", "know"));
-
-    // Maps different words with the same meaning to one canonical word.
     private static final Map<String, String> SYNONYMS = new HashMap<>();
     static {
         SYNONYMS.put("hi", "hello");
@@ -56,8 +49,6 @@ public class NLPProcessor {
         }
         return tokens;
     }
-
-    /** A very small suffix-stripping stemmer. */
     private String stem(String w) {
         if (w.length() > 5 && w.endsWith("ing")) return w.substring(0, w.length() - 3);
         if (w.length() > 4 && w.endsWith("ed")) return w.substring(0, w.length() - 2);
