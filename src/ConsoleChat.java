@@ -1,6 +1,4 @@
 import java.util.Scanner;
-
-/** Console interface for the chatbot. */
 public class ConsoleChat {
     public static void run() {
         Chatbot bot = new Chatbot();
