@@ -1,8 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-
-/** Swing GUI for real-time chatting with the bot. */
 public class ChatGUI extends JFrame {
     private final JTextArea chatArea = new JTextArea();
     private final JTextField inputField = new JTextField();
