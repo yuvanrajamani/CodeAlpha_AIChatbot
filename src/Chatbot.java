@@ -2,8 +2,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
-
-/** The chatbot brain: rule-based commands first, then ML-style FAQ matching. */
 public class Chatbot {
     private static final double THRESHOLD = 0.30;
     private final KnowledgeBase kb = new KnowledgeBase(new NLPProcessor());
@@ -26,8 +24,6 @@ public class Chatbot {
         String text = input.trim();
         if (text.isEmpty()) return "Please type something.";
         String lower = text.toLowerCase();
-
-        // --- Rule-based commands ---
         if (lower.equals("exit") || lower.equals("quit") || lower.equals("bye")) {
             finished = true;
             return "Goodbye! Good luck with your internship!";
@@ -52,8 +48,6 @@ public class Chatbot {
             kb.learn(q, a);
             return "Thanks! I've learned a new answer. Ask me that question to test it.";
         }
-
-        // --- NLP + similarity matching ---
         FaqEntry match = kb.findBestMatch(text, THRESHOLD);
         if (match != null) return match.getAnswer();
         return FALLBACKS[random.nextInt(FALLBACKS.length)];
